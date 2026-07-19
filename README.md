@@ -2,6 +2,8 @@
 
 A complete Student Management System built using React (Vite) on the frontend, Node.js + Express on the backend, and MongoDB (via Mongoose) as the database. It features responsive design, advanced search and filter, client-side/server-side validations, and complete CRUD operations.
 
+> **Project report:** See [PROJECT_REPORT.md](PROJECT_REPORT.md) for the requirements, use-case diagram, ER diagram, system architecture, workflow sequence diagram, API specification, and validation rules.
+
 ## Technology Stack
 
 - **Frontend**: React (Vite), React Router DOM (v6), Axios, and Custom Vanilla CSS (Premium design with gradients, micro-animations, and responsive layout).

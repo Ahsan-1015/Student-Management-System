@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../lib/api';
 import Navbar from '../components/Navbar';
 import StudentList from '../components/StudentList';
-
-const API_BASE_URL = 'http://localhost:5000/api/students';
 
 const Home = () => {
   const [students, setStudents] = useState([]);
@@ -32,7 +30,7 @@ const Home = () => {
       if (deptFilter !== 'All') params.department = deptFilter;
       if (classFilter !== 'All') params.class = classFilter;
 
-      const response = await axios.get(API_BASE_URL, { params });
+      const response = await api.get('/students', { params });
       setStudents(response.data);
     } catch (err) {
       console.error('API Error fetching students:', err);
@@ -57,7 +55,7 @@ const Home = () => {
     setDeleteLoading(true);
     setError(null);
     try {
-      await axios.delete(`${API_BASE_URL}/${studentToDelete._id}`);
+      await api.delete(`/students/${studentToDelete._id}`);
       setSuccessMessage(`Successfully deleted student: ${studentToDelete.fullName}`);
       setStudentToDelete(null);
       fetchStudents(); // Refresh list

@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../lib/api';
 import Navbar from '../components/Navbar';
 import StudentForm from '../components/StudentForm';
-
-const API_BASE_URL = 'http://localhost:5000/api/students';
 
 const EditStudent = () => {
   const { id } = useParams();
@@ -19,7 +17,7 @@ const EditStudent = () => {
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/${id}`);
+        const response = await api.get(`/students/${id}`);
         setStudent(response.data);
       } catch (err) {
         console.error('API Error fetching student details:', err);
@@ -36,7 +34,7 @@ const EditStudent = () => {
     setLoading(true);
     setError(null);
     try {
-      await axios.put(`${API_BASE_URL}/${id}`, studentData);
+      await api.put(`/students/${id}`, studentData);
       navigate('/');
     } catch (err) {
       console.error('API Error updating student:', err);

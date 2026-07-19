@@ -84,6 +84,45 @@ Make sure you have [Node.js](https://nodejs.org/) (v16+ recommended) and [MongoD
 
 ---
 
+## Deploy to Vercel
+
+The frontend and backend are deployed as **two separate Vercel projects** from this same repository. The backend needs a cloud MongoDB database; use a MongoDB Atlas connection string, not `localhost`.
+
+### 1. Prepare MongoDB Atlas
+
+1. Create a MongoDB Atlas cluster and database user.
+2. In Atlas Network Access, allow Vercel to reach the database (for a simple first deployment, `0.0.0.0/0`; restrict it later if possible).
+3. Copy the SRV connection string, for example `mongodb+srv://<user>:<password>@<cluster>/student_db?retryWrites=true&w=majority`.
+
+### 2. Deploy the backend
+
+1. In Vercel, click **Add New → Project** and import this Git repository.
+2. Set **Root Directory** to `backend`. Vercel automatically uses `backend/api/index.js` as the serverless API entry point.
+3. Add these environment variables for Production, Preview, and Development:
+
+   ```env
+   MONGO_URI=your_mongodb_atlas_connection_string
+   CLIENT_ORIGIN=https://your-frontend.vercel.app
+   ```
+
+4. Deploy and copy the backend URL, e.g. `https://student-api.vercel.app`. Opening that URL should return an API status message.
+
+### 3. Deploy the frontend
+
+1. Create another Vercel project from the same repository and set **Root Directory** to `frontend`.
+2. Add the environment variable below (include `/api`, without a trailing slash):
+
+   ```env
+   VITE_API_BASE_URL=https://student-api.vercel.app/api
+   ```
+
+3. Deploy. The included `frontend/vercel.json` makes refreshes on `/add` and `/edit/:id` work correctly.
+4. Return to the backend project, update `CLIENT_ORIGIN` with the exact deployed frontend URL, and redeploy the backend.
+
+> Never commit `.env` files or MongoDB credentials. Use `backend/.env.example` and `frontend/.env.example` only as templates.
+
+---
+
 ## Features
 
 1. **Student Database Schema**:

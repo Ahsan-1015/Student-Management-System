@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../lib/api';
 import Navbar from '../components/Navbar';
 import StudentForm from '../components/StudentForm';
-
-const API_BASE_URL = 'http://localhost:5000/api/students';
 
 const AddStudent = () => {
   const navigate = useNavigate();
@@ -15,7 +13,7 @@ const AddStudent = () => {
     setLoading(true);
     setError(null);
     try {
-      await axios.post(API_BASE_URL, studentData);
+      await api.post('/students', studentData);
       // Navigate to Home upon successful creation
       navigate('/');
     } catch (err) {

@@ -5,9 +5,6 @@ const app = require('./app');
 // Load environment variables
 dotenv.config();
 
-// Connect to Database
-connectDB();
-
 const PORT = process.env.PORT || 5000;
 
 connectDB()

@@ -8,37 +8,20 @@ dotenv.config();
 
 const app = express();
 
-// Configure CORS to allow all origins
-// This is necessary for the Vercel deployment where env vars may not be set
+const rawOrigins = process.env.CLIENT_ORIGIN || '*';
+const allowedOrigins = rawOrigins === '*'
+  ? true
+  : rawOrigins.split(',').map((origin) => origin.trim()).filter(Boolean);
+
 app.use(cors({
-  origin: true,
+  origin: allowedOrigins,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
 }));
 
-// Explicitly set CORS headers for Vercel serverless compatibility
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  next();
-});
-
-// Handle OPTIONS preflight requests
-app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.sendStatus(200);
-});
-
 app.use(express.json());
 
-// A serverless function may start cold, so make sure MongoDB is connected
-// before every request. connectDB reuses an existing Mongoose connection.
 app.use(async (req, res, next) => {
   try {
     await connectDB();

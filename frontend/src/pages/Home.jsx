@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import api from '../lib/api';
 import Navbar from '../components/Navbar';
 import StudentList from '../components/StudentList';
@@ -20,8 +20,7 @@ const Home = () => {
   // Success Banner state
   const [successMessage, setSuccessMessage] = useState('');
 
-  // Fetch students function
-  const fetchStudents = async () => {
+  const fetchStudents = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -38,7 +37,7 @@ const Home = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchQuery, deptFilter, classFilter]);
 
   // Debounced effect for search/filters
   useEffect(() => {
@@ -47,7 +46,7 @@ const Home = () => {
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [searchQuery, deptFilter, classFilter]);
+  }, [fetchStudents]);
 
   // Handle Delete Confirmation
   const handleDeleteConfirm = async () => {
